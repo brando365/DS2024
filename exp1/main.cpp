@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-#include "D:\DS2024\vector\vector.h"
+#include "vector.cpp"
 #include <chrono>
 #include <ctime>
 using namespace std;
@@ -35,6 +35,7 @@ public:
 void print(Complex &c){
     cout<<c.real<<"+"<<c.imag<<"i ";
 }
+//生成随机复数
 Vector<Complex> GRV(int size){
     Vector<Complex> vec;
     int s = size-1;
@@ -135,7 +136,7 @@ Vector<Complex> unGRV(int size){
 
 
 int main(){
-    int n = 10;
+    int n = 100;
     Vector<Complex> vec = GRV(n);
     vec.traverse(print);
     cout<<"\n"<<"置乱后"<<endl;
@@ -191,7 +192,7 @@ int main(){
     total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
     printf("置乱归并排序的总时间：%f\n", total_t  );
 
-    Vector<Complex> vec2 = unGRV(10);
+    Vector<Complex> vec2 = unGRV(n);
     start_t = clock();
     vec2.bubbleSort(0, vec2.size()-1);
     end_t = clock();
