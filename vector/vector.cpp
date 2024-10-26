@@ -1,5 +1,5 @@
-
-
+#include <initializer_list>
+#include <vector>
 typedef int Rank;		   // 秩
 #define DEFAULT_CAPACITY 3 // 默认的初始容量（实际应用中可设置为更大）
 
@@ -30,12 +30,13 @@ public:
 		for (_size = 0; _size < s; _elem[_size++] = v)
 			;
 	} // s <= c
+     Vector(std::initializer_list<T> list) {}
 	Vector(T const *A, Rank lo, Rank hi) { copyFrom(A, lo, hi); }				// 数组区间复制
 	Vector(T const *A, Rank n) { copyFrom(A, 0, n); }							// 数组整体复制
 	Vector(Vector<T> const &V, Rank lo, Rank hi) { copyFrom(V._elem, lo, hi); } // 向量区间复制
 	Vector(Vector<T> const &V) { copyFrom(V._elem, 0, V._size); }				// 向量整体复制
 	// 析构函数
-	~Vector() { delete[] _elem; } // 释放内部空间
+	// ~Vector() { delete[] _elem; } // 释放内部空间
 	// 只读访问接口
 	Rank size() const { return _size; }						  // 规模
 	bool empty() const { return !_size; }					  // 判空
@@ -384,31 +385,32 @@ bool Vector<T>::bubble(Rank lo, Rank hi) // 一趟扫描交换
 }
 
 // 2.28向量归并排序
-
-
-
-
-
-
-
+template <typename T>
+void Vector<T>::mergeSort(Rank lo, Rank hi)
+{ // 0 <= lo < hi <=_size
+	if (hi - lo < 2)
+		return;				 // 单元素区间自然有序，否则...
+	int mi = (lo + hi) >> 1; // 以中点为界
+	mergeSort(lo, mi);
+	mergeSort(mi, hi);
+	merge(lo, mi, hi); // 分别对前，后半段排序，然后归并
+}
 
 // 2.29有序向量的二路归并
-template <typename T> // 有序向量的归并
-void Vector<T>::merge(Rank lo, Rank mi, Rank hi)
-{					   // 以mi为界、各自有序的子向量[lo,mi]和[mi,hi]
-	T *A = _elem + lo; // 合并后的向量A[0, hi - lo] = _elem[lo,mi]
-	int lb = mi - lo;
-	T *B = new T[lb]; // 前子向量B[0,lb] = _elem[lo,mi]
-	for (Rank i = 0; i < lb; B[i] = A[i++])
-		; // 复制前子向量
-	int lc = hi - mi;
-	T *C = _elem + mi; // 后子向量c[0,lc] = _elem[mi,hi]
-	for (Rank i = 0, j = 0, k = 0; (j < lb) || (k < lc);)
-	{ // 将b[j]和C[k]中的小者续至末尾
-		if ((j < lb) && (!(k < lc) || (B[j] <= C[k])))
-			A[i++] = B[j++];
-		if ((k < lc) && (!(j < lb) || (C[k] < B[j])))
-			A[i++] = C[k++];
-	}
-	// delete[] B; // 释放临时空间B
-} // 归并后得到完整的有序向量[lo,hi]
+template <typename T>
+void Vector<T>::merge(Rank lo, Rank mi, Rank hi) {
+    T* A = _elem + lo;
+    int lb = mi - lo;
+    T* B = new T[lb];
+    for (Rank i = 0; i < lb; i++) B[i] = A[i]; // 复制前子向量
+    
+    int lc = hi - mi;
+    T* C = _elem + mi; // 后子向量C[0, lc)就地
+    
+    for (Rank i = 0, j = 0, k = 0; j < lb; ) { // 归并：反复从B和C中取出更小者
+        if (k >= lc || B[j] < C[k]) A[i++] = B[j++];
+        else A[i++] = C[k++];
+    }
+    delete [] B; // 释放临时空间B
+}
+ // 归并后得到完整的有序向量[lo,hi]
