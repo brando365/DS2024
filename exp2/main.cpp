@@ -7,22 +7,7 @@
 #include <algorithm>
 #include <limits>
 using namespace std;
-//2. 基于优先级表实现的字符串计算器
-#define N_OPTR 9 
- typedef enum {ADD, SUB, MUL, DIV, POW, FAC, L_P, R_P, EOE} Operator; 
- const char pri[N_OPTR][N_OPTR] = { 
-/* |-------------- 前运算符 --------------| */
-/* + - * / ^ ! ( ) \0 */
- /* -- + */ '>', '>', '<', '<', '<', '<', '<', '>', '>',
- /* | - */ '>', '>', '<', '<', '<', '<', '<', '>', '>',
- /* 栈 * */ '>', '>', '>', '>', '<', '<', '<', '>', '>',
- /* 顶 / */ '>', '>', '>', '>', '<', '<', '<', '>', '>',
- /* 运 ^ */ '>', '>', '>', '>', '>', '<', '<', '>', '>',
- /* 算 ! */ '>', '>', '>', '>', '>', '>', ' ', '>', '>',
- /* 符 ( */ '<', '<', '<', '<', '<', '<', '<', '=', ' ',
- /* | ) */ ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
- /* -- \0 */ '<', '<', '<', '<', '<', '<', '<', ' ', '='
- };
+
 
 
 // 定义运算符的优先级
@@ -134,6 +119,15 @@ double cos(const string &expression) {
     double angle = stod(expression.substr(start + 1, end - start - 1));
     return cos(angle * M_PI / 180.0);
 }
+double ln(const string &expression) {
+    size_t start = expression.find('(');
+    size_t end = expression.find(')');
+    if (start == string::npos || end == string::npos || start > end) {
+        throw runtime_error("Invalid logarithm expression");
+    }
+    double num = stod(expression.substr(start + 1, end - start - 1));
+    return log(num);
+}
 // 求柱状图中最大矩形面积
 int largestarea(const vector<int> &heights) {
     Stack<int> st;
@@ -160,7 +154,7 @@ int largestarea(const vector<int> &heights) {
 void generatetest(int numTests) {
     srand(time(0)); // 初始化随机数种子
     for (int i = 0; i < numTests; ++i) {
-        int length = rand() % 105 + 1; // 随机生成柱状图长度 (1 到 105)
+        int length = rand() % 104 + 1; // 随机生成柱状图长度 (1 到 105)
         vector<int> heights(length);
         cout << "输入" << i + 1 << ": [ ";
         for (int j = 0; j < length; ++j) {
@@ -181,6 +175,8 @@ int main() {
     cout << "数字运算: " << A2 << " = " << calculate(A2) << endl << endl;
     string A3 = "cos(30)";
     cout << "数字运算: " << A3 << " = " << cos(A3) << endl << endl;
+    string A4 = "ln(10)";
+    cout << "数字运算: " << A4 << " = " << ln(A4) << endl << endl;
     // 测试柱状图最大矩形面积
     vector<int> B1 = {2, 1, 5, 6, 2, 3};
     vector<int> B2 = {2, 4};
