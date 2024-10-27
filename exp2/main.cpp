@@ -9,7 +9,7 @@
 using namespace std;
 
 
-// å®šä¹‰è¿ç®—ç¬¦çš„ä¼˜å…ˆçº§
+// ¶¨ÒåÔËËã·ûµÄÓÅÏÈ¼¶
 int precedence(char op) {
     switch (op) {
         case '+': case '-': return 1;
@@ -20,7 +20,7 @@ int precedence(char op) {
     }
 }
 
-// è®¡ç®—ä¸¤ä¸ªæ“ä½œæ•°å’Œä¸€ä¸ªæ“ä½œç¬¦çš„ç»“æœ
+// ¼ÆËãÁ½¸ö²Ù×÷ÊıºÍÒ»¸ö²Ù×÷·ûµÄ½á¹û
 double evaluate(double a, double b, char op) {
     switch (op) {
         case '+': return a + b;
@@ -37,20 +37,20 @@ double evaluate(double a, double b, char op) {
     }
 }
 
-// æ£€æŸ¥å­—ç¬¦æ˜¯å¦ä¸ºæ“ä½œç¬¦
+// ¼ì²é×Ö·ûÊÇ·ñÎª²Ù×÷·û
 bool isOperator(char c) {
     return c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '!';
 }
 
-// æ£€æŸ¥å­—ç¬¦æ˜¯å¦ä¸ºæ•°å­—
+// ¼ì²é×Ö·ûÊÇ·ñÎªÊı×Ö
 bool isNumber(char c) {
     return isdigit(c) || c == '.';
 }
 
-// è®¡ç®—è¡¨è¾¾å¼çš„å€¼
+// ¼ÆËã±í´ïÊ½µÄÖµ
 double calculate(const string &expression) {
-    Stack<double> numStack;  // æ“ä½œæ•°æ ˆ
-    Stack<char> opStack;     // è¿ç®—ç¬¦æ ˆ
+    Stack<double> numStack;  // ²Ù×÷ÊıÕ»
+    Stack<char> opStack;     // ÔËËã·ûÕ»
     string numBuffer;
 
     for (size_t i = 0; i < expression.size(); ++i) {
@@ -99,7 +99,7 @@ double calculate(const string &expression) {
     return numStack.top();
 }
 
-// æ‰©å±•ï¼šæ”¯æŒä¸‰è§’å‡½æ•°
+// À©Õ¹£ºÖ§³ÖÈı½Çº¯Êı
 double sin(const string &expression) {
     size_t start = expression.find('(');
     size_t end = expression.find(')');
@@ -107,7 +107,7 @@ double sin(const string &expression) {
         throw runtime_error("Invalid trigonometric expression");
     }
     double angle = stod(expression.substr(start + 1, end - start - 1));
-    return sin(angle * M_PI / 180.0); // å°†è§’åº¦è½¬æ¢ä¸ºå¼§åº¦
+    return sin(angle * M_PI / 180.0); // ½«½Ç¶È×ª»»Îª»¡¶È
 }
 double cos(const string &expression) {
     size_t start = expression.find('(');
@@ -118,6 +118,7 @@ double cos(const string &expression) {
     double angle = stod(expression.substr(start + 1, end - start - 1));
     return cos(angle * M_PI / 180.0);
 }
+//¶ÔÊıº¯Êı
 double ln(const string &expression) {
     size_t start = expression.find('(');
     size_t end = expression.find(')');
@@ -149,41 +150,41 @@ int largestarea(const vector<int> &heights) {
     return maxArea;
 }
 
-// éšæœºç”Ÿæˆæµ‹è¯•æ•°æ®
+// Ëæ»úÉú³É²âÊÔÊı¾İ
 void generatetest(int numTests) {
-    srand(time(0)); // åˆå§‹åŒ–éšæœºæ•°ç§å­
+    srand(time(0)); // ³õÊ¼»¯Ëæ»úÊıÖÖ×Ó
     for (int i = 0; i < numTests; ++i) {
-        int length = rand() % 104 + 1; // Ëæ»úÉú³ÉÖù×´Í¼³¤¶È (1 µ½ 105)
+        int length = rand() % 105 + 1; // Ëæ»úÉú³ÉÖù×´Í¼³¤¶È (1 µ½ 105)
         vector<int> heights(length);
-        cout << "è¾“å…¥" << i + 1 << ": [ ";
+        cout << "ÊäÈë" << i + 1 << ": [ ";
         for (int j = 0; j < length; ++j) {
-            heights[j] = rand() % 104; // éšæœºç”ŸæˆæŸ±å­é«˜åº¦ (0 åˆ° 104)
+            heights[j] = rand() % 104; // Ëæ»úÉú³ÉÖù×Ó¸ß¶È (0 µ½ 104)
             cout << heights[j] << " ";
         }
         cout << "]" << endl;
         int maxArea = largestarea(heights);
-        cout << "è¾“å‡º: " << maxArea << endl << endl;
+        cout << "Êä³ö: " << maxArea << endl << endl;
     }
 }
 
 int main() {
-    // å­—ç¬¦ä¸²è®¡ç®—å™¨ç¤ºä¾‹æµ‹è¯•
+    // ×Ö·û´®¼ÆËãÆ÷Ê¾Àı²âÊÔ
     string A1 = "5 ^ 3 - 2.4 * 16 / 2";
-    cout << "æ•°å­—è¿ç®—: " << A1 << " = " << calculate(A1) << endl << endl;
+    cout << "Êı×ÖÔËËã: " << A1 << " = " << calculate(A1) << endl << endl;
     string A2 = "(8 - 2) * 5";
-    cout << "æ•°å­—è¿ç®—: " << A2 << " = " << calculate(A2) << endl << endl;
+    cout << "Êı×ÖÔËËã: " << A2 << " = " << calculate(A2) << endl << endl;
     string A3 = "cos(30)";
     cout << "Êı×ÖÔËËã: " << A3 << " = " << cos(A3) << endl << endl;
     string A4 = "ln(10)";
-    cout << "Êı×ÖÔËËã: " << A4 << " = " << ln(A4) << endl << endl;
+    cout << "Êı×ÖÔËËã: " << A4 << " = " << ln(A3) << endl << endl;
     // ²âÊÔÖù×´Í¼×î´ó¾ØĞÎÃæ»ı
     vector<int> B1 = {2, 1, 5, 6, 2, 3};
     vector<int> B2 = {2, 4};
-    cout << "è¾“å…¥: [2, 1, 5, 6, 2, 3]" << endl;
-    cout << "è¾“å‡º: " << largestarea(B1) << endl << endl;
-    cout << "è¾“å…¥: [2, 4]" << endl;
-    cout << "è¾“å‡º: " << largestarea(B2) << endl << endl;
-    // éšæœºç”Ÿæˆ 10 ç»„æµ‹è¯•æ•°æ®
+    cout << "ÊäÈë: [2, 1, 5, 6, 2, 3]" << endl;
+    cout << "Êä³ö: " << largestarea(B1) << endl << endl;
+    cout << "ÊäÈë: [2, 4]" << endl;
+    cout << "Êä³ö: " << largestarea(B2) << endl << endl;
+    // Ëæ»úÉú³É 10 ×é²âÊÔÊı¾İ
     generatetest(10);
     return 0;
 }
