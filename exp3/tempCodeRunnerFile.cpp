@@ -4,25 +4,25 @@
 #include <fstream>
 #include <cctype>  
 using namespace std;
-// Bitmap Àà£º±íÊ¾Ò»¸öÎ»Í¼£¬Ö§³ÖÍ¨¹ıË÷Òı´æÈ¡ºÍÀ©Õ¹Î»Í¼´óĞ¡¡£
+// Bitmap ç±»ï¼šè¡¨ç¤ºä¸€ä¸ªä½å›¾ï¼Œæ”¯æŒé€šè¿‡ç´¢å¼•å­˜å–å’Œæ‰©å±•ä½å›¾å¤§å°ã€‚
 class Bitmap {
 public:
-    Bitmap(int n) : bits(n) {} // ¹¹Ôìº¯Êı£¬³õÊ¼»¯Î»Í¼£¬Î»Í¼µÄ´óĞ¡Îªn
+    Bitmap(int n) : bits(n) {} // æ„é€ å‡½æ•°ï¼Œåˆå§‹åŒ–ä½å›¾ï¼Œä½å›¾çš„å¤§å°ä¸ºn
     void set(int index, bool value) { if (index < bits.size()) bits[index] = value; }
     bool test(int index) const { return index < bits.size() && bits[index]; }
     void expand(int index) { if (index >= bits.size()) bits.resize(index + 1); }
 private:
-    vector<bool> bits; // ´æ´¢Î»Í¼Êı¾İµÄÈİÆ÷
+    vector<bool> bits; // å­˜å‚¨ä½å›¾æ•°æ®çš„å®¹å™¨
 };
-// HuffCode Àà£º¼Ì³Ğ×Ô Bitmap Àà£¬±íÊ¾»ô·òÂü±àÂë¡£
-// ÓÃÓÚ´æ´¢ºÍ¹ÜÀí»ô·òÂü±àÂë½á¹û¡£
+// HuffCode ç±»ï¼šç»§æ‰¿è‡ª Bitmap ç±»ï¼Œè¡¨ç¤ºéœå¤«æ›¼ç¼–ç ã€‚
+// ç”¨äºå­˜å‚¨å’Œç®¡ç†éœå¤«æ›¼ç¼–ç ç»“æœã€‚
 class HuffCode : public Bitmap {
 public:
     HuffCode() : Bitmap(8) {}
     HuffCode(int n) : Bitmap(n) {}
 };
-// HuffChar ½á¹¹Ìå£º±íÊ¾»ô·òÂüÊ÷ÖĞµÄ×Ö·û½Úµã¡£
-// °üº¬×Ö·û¡¢×Ö·ûµÄÈ¨ÖØ£¨ÆµÂÊ£©ÒÔ¼°»ô·òÂü±àÂë¡£
+// HuffChar ç»“æ„ä½“ï¼šè¡¨ç¤ºéœå¤«æ›¼æ ‘ä¸­çš„å­—ç¬¦èŠ‚ç‚¹ã€‚
+// åŒ…å«å­—ç¬¦ã€å­—ç¬¦çš„æƒé‡ï¼ˆé¢‘ç‡ï¼‰ä»¥åŠéœå¤«æ›¼ç¼–ç ã€‚
 struct HuffChar {
     char ch;
     int weight;
@@ -39,19 +39,19 @@ struct BinNode {
     BinNode(T e, BinNode<T>* l = nullptr, BinNode<T>* r = nullptr, BinNode<T>* p = nullptr)
         : data(e), left(l), right(r), parent(p) {}
 };
-// HuffTree Àà£º±íÊ¾»ô·òÂüÊ÷£¬Ìá¹©»ô·òÂü±àÂëµÄÉú³ÉºÍ±àÂëµÄ²Ù×÷¡£
-// ¸ÃÀàÍ¨¹ı¹¹½¨»ô·òÂüÊ÷²¢Éú³ÉÃ¿¸ö×Ö·ûµÄ»ô·òÂü±àÂë£¬Ö§³Ö±àÂëºÍ´òÓ¡±àÂë½á¹û¡£
+// HuffTree ç±»ï¼šè¡¨ç¤ºéœå¤«æ›¼æ ‘ï¼Œæä¾›éœå¤«æ›¼ç¼–ç çš„ç”Ÿæˆå’Œç¼–ç çš„æ“ä½œã€‚
+// è¯¥ç±»é€šè¿‡æ„å»ºéœå¤«æ›¼æ ‘å¹¶ç”Ÿæˆæ¯ä¸ªå­—ç¬¦çš„éœå¤«æ›¼ç¼–ç ï¼Œæ”¯æŒç¼–ç å’Œæ‰“å°ç¼–ç ç»“æœã€‚
 class HuffTree {
 private:
-    BinNode<HuffChar>* root;  // »ô·òÂüÊ÷µÄ¸ù½Úµã
+    BinNode<HuffChar>* root;  // éœå¤«æ›¼æ ‘çš„æ ¹èŠ‚ç‚¹
     vector<BinNode<HuffChar>*> forest; 
         void buildHuffTree(int* freq, int n) {
         struct CompareNode {
             bool operator()(BinNode<HuffChar>* a, BinNode<HuffChar>* b) {
-                return a->data.weight > b->data.weight; // °´È¨ÖØÉıĞòÅÅÁĞ
+                return a->data.weight > b->data.weight; // æŒ‰æƒé‡å‡åºæ’åˆ—
             }
         };
-        priority_queue<BinNode<HuffChar>*, vector<BinNode<HuffChar>*>, CompareNode> pq;  // ÓÅÏÈ¶ÓÁĞ£¬°´È¨ÖØÅÅĞò
+        priority_queue<BinNode<HuffChar>*, vector<BinNode<HuffChar>*>, CompareNode> pq;  // ä¼˜å…ˆé˜Ÿåˆ—ï¼ŒæŒ‰æƒé‡æ’åº
         for (int i = 0; i < n; i++) {
             if (freq[i] > 0) {
                 BinNode<HuffChar>* node = new BinNode<HuffChar>(HuffChar(i + 'a', freq[i]));
@@ -59,7 +59,7 @@ private:
                 pq.push(node);
             }
         }
-        // ºÏ²¢½ÚµãÖ±µ½Ö»Ê£Ò»¸ö¸ù½Úµã
+        // åˆå¹¶èŠ‚ç‚¹ç›´åˆ°åªå‰©ä¸€ä¸ªæ ¹èŠ‚ç‚¹
         while (pq.size() > 1) {
             BinNode<HuffChar>* left = pq.top(); pq.pop();
             BinNode<HuffChar>* right = pq.top(); pq.pop();          
@@ -70,46 +70,46 @@ private:
             forest.push_back(parent);
             pq.push(parent);
         }
-        root = pq.empty() ? nullptr : pq.top(); // ÉèÖÃ¸ù½Úµã
+        root = pq.empty() ? nullptr : pq.top(); // è®¾ç½®æ ¹èŠ‚ç‚¹
     }
-    // µİ¹éÉú³É»ô·òÂü±àÂë
+    // é€’å½’ç”Ÿæˆéœå¤«æ›¼ç¼–ç 
     void generateCodes(BinNode<HuffChar>* node, HuffCode& prefix, int length, HuffCode codeTable[], int n) {
-        if (!node) return; // Óöµ½¿Õ½Úµã·µ»Ø
-        // Ò¶×Ó½Úµã£¨×Ö·û½Úµã£©£¬±£´æ±àÂë
+        if (!node) return; // é‡åˆ°ç©ºèŠ‚ç‚¹è¿”å›
+        // å¶å­èŠ‚ç‚¹ï¼ˆå­—ç¬¦èŠ‚ç‚¹ï¼‰ï¼Œä¿å­˜ç¼–ç 
         if (!node->left && !node->right) {
             codeTable[node->data.ch - 'a'] = prefix;
             codeTable[node->data.ch - 'a'].expand(length);
             return;
         }
-        // µİ¹éÉú³É×ó×ÓÊ÷µÄ±àÂë£¨0£©
+        // é€’å½’ç”Ÿæˆå·¦å­æ ‘çš„ç¼–ç ï¼ˆ0ï¼‰
         if (node->left) {
             prefix.set(length, 0);
             generateCodes(node->left, prefix, length + 1, codeTable, n);
         }
-        // µİ¹éÉú³ÉÓÒ×ÓÊ÷µÄ±àÂë£¨1£©
+        // é€’å½’ç”Ÿæˆå³å­æ ‘çš„ç¼–ç ï¼ˆ1ï¼‰
         if (node->right) {
             prefix.set(length, 1);
             generateCodes(node->right, prefix, length + 1, codeTable, n);
         }
     }
 public:
-    // ¹¹Ôìº¯Êı£ºÍ¨¹ıÆµÂÊÊı×é¹¹½¨»ô·òÂüÊ÷
+    // æ„é€ å‡½æ•°ï¼šé€šè¿‡é¢‘ç‡æ•°ç»„æ„å»ºéœå¤«æ›¼æ ‘
     HuffTree(int* freq, int n) : root(nullptr) {
         buildHuffTree(freq, n);
     }
-    // Îö¹¹º¯Êı£¬ÊÍ·ÅËùÓĞ¶¯Ì¬·ÖÅäµÄ½Úµã
+    // ææ„å‡½æ•°ï¼Œé‡Šæ”¾æ‰€æœ‰åŠ¨æ€åˆ†é…çš„èŠ‚ç‚¹
     ~HuffTree() {
         for (auto node : forest) {
             delete node;
         }
     }
-    // Éú³É»ô·òÂü±àÂë
+    // ç”Ÿæˆéœå¤«æ›¼ç¼–ç 
     void generateCodes(HuffCode codeTable[], int n) {
         if (!root) return;
-        HuffCode prefix(n * 8); // ±àÂëÇ°×º£¨×î´óÖ§³Ö8Î»±àÂë£©
+        HuffCode prefix(n * 8); // ç¼–ç å‰ç¼€ï¼ˆæœ€å¤§æ”¯æŒ8ä½ç¼–ç ï¼‰
         generateCodes(root, prefix, 0, codeTable, n);
     }
-    // ´òÓ¡»ô·òÂü±àÂë
+    // æ‰“å°éœå¤«æ›¼ç¼–ç 
     void printCodes(HuffCode codeTable[], int n) {
         for (int i = 0; i < n; i++) {
             if (forest.size() > 0) {
@@ -137,10 +137,10 @@ public:
         }
     }
 };
-// encodeWord º¯Êı£º½«Ö¸¶¨µÄµ¥´Ê±àÂë²¢Êä³ö¡£
-// word ÎªÒª±àÂëµÄµ¥´Ê£¬codeTable Îª»ô·òÂü±àÂë±í£¬n Îª×Ö·ûÊı¡£
+// encodeWord å‡½æ•°ï¼šå°†æŒ‡å®šçš„å•è¯ç¼–ç å¹¶è¾“å‡ºã€‚
+// word ä¸ºè¦ç¼–ç çš„å•è¯ï¼ŒcodeTable ä¸ºéœå¤«æ›¼ç¼–ç è¡¨ï¼Œn ä¸ºå­—ç¬¦æ•°ã€‚
 void encodeWord(const string& word, HuffCode codeTable[], int n) {
-    cout << "±àÂë " << word << " : ";
+    cout << "ç¼–ç  " << word << " : ";
     for (char c : word) {
         if (isalpha(c)) {
             HuffCode& code = codeTable[tolower(c) - 'a'];
@@ -163,18 +163,18 @@ void encodeWord(const string& word, HuffCode codeTable[], int n) {
     cout << "\n";
 }
 void huffmanExample() {
-    const int N_CHAR = 26; // 26¸ö×ÖÄ¸
-    // ´ò¿ªÎÄ¼ş
+    const int N_CHAR = 26; // 26ä¸ªå­—æ¯
+    // æ‰“å¼€æ–‡ä»¶
     ifstream inputFile("word.txt");  
     string text;
-    // ¶ÁÈ¡ÎÄ¼şÄÚÈİ
+    // è¯»å–æ–‡ä»¶å†…å®¹
     char c;
     while (inputFile.get(c)) {
         text += c;
     }
     inputFile.close();
     int freq[N_CHAR] = {0};
-    // ¼ÆËãÆµÂÊ
+    // è®¡ç®—é¢‘ç‡
     for (char c : text) {
         if (isalpha(c)) {
             freq[tolower(c) - 'a']++;
@@ -184,7 +184,7 @@ void huffmanExample() {
     HuffCode codeTable[N_CHAR];
     tree->generateCodes(codeTable, N_CHAR);
     tree->printCodes(codeTable, N_CHAR);
-    // ±àÂëÌØ¶¨µ¥´Ê
+    // ç¼–ç ç‰¹å®šå•è¯
     encodeWord("dream", codeTable, N_CHAR);
     encodeWord("love", codeTable, N_CHAR);
     encodeWord("is", codeTable, N_CHAR);
