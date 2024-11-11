@@ -2,8 +2,10 @@
 #include <queue>
 #include <string>
 #include <fstream>
-#include <cctype>  
+#include <cctype>
+#include <vector>
 using namespace std;
+
 // Bitmap 类：表示一个位图，支持通过索引存取和扩展位图大小。
 class Bitmap {
 public:
@@ -14,6 +16,7 @@ public:
 private:
     vector<bool> bits; // 存储位图数据的容器
 };
+
 // HuffCode 类：继承自 Bitmap 类，表示霍夫曼编码。
 // 用于存储和管理霍夫曼编码结果。
 class HuffCode : public Bitmap {
@@ -21,6 +24,7 @@ public:
     HuffCode() : Bitmap(8) {}
     HuffCode(int n) : Bitmap(n) {}
 };
+
 // HuffChar 结构体：表示霍夫曼树中的字符节点。
 // 包含字符、字符的权重（频率）以及霍夫曼编码。
 struct HuffChar {
@@ -29,6 +33,7 @@ struct HuffChar {
     HuffCode code;
     HuffChar(char c = '^', int w = 0) : ch(c), weight(w) {}
 };
+
 template <typename T>
 struct BinNode {
     T data;
@@ -39,13 +44,14 @@ struct BinNode {
     BinNode(T e, BinNode<T>* l = nullptr, BinNode<T>* r = nullptr, BinNode<T>* p = nullptr)
         : data(e), left(l), right(r), parent(p) {}
 };
+
 // HuffTree 类：表示霍夫曼树，提供霍夫曼编码的生成和编码的操作。
 // 该类通过构建霍夫曼树并生成每个字符的霍夫曼编码，支持编码和打印编码结果。
 class HuffTree {
 private:
     BinNode<HuffChar>* root;  // 霍夫曼树的根节点
     vector<BinNode<HuffChar>*> forest; 
-        void buildHuffTree(int* freq, int n) {
+    void buildHuffTree(int* freq, int n) {
         struct CompareNode {
             bool operator()(BinNode<HuffChar>* a, BinNode<HuffChar>* b) {
                 return a->data.weight > b->data.weight; // 按权重升序排列
@@ -72,7 +78,6 @@ private:
         }
         root = pq.empty() ? nullptr : pq.top(); // 设置根节点
     }
-    // 递归生成霍夫曼编码
     void generateCodes(BinNode<HuffChar>* node, HuffCode& prefix, int length, HuffCode codeTable[], int n) {
         if (!node) return; // 遇到空节点返回
         // 叶子节点（字符节点），保存编码
@@ -111,6 +116,7 @@ public:
     }
     // 打印霍夫曼编码
     void printCodes(HuffCode codeTable[], int n) {
+        cout<<"霍夫曼编码:"<<endl;
         for (int i = 0; i < n; i++) {
             if (forest.size() > 0) {
                 for (auto node : forest) {
@@ -137,6 +143,7 @@ public:
         }
     }
 };
+
 // encodeWord 函数：将指定的单词编码并输出。
 // word 为要编码的单词，codeTable 为霍夫曼编码表，n 为字符数。
 void encodeWord(const string& word, HuffCode codeTable[], int n) {
@@ -162,6 +169,7 @@ void encodeWord(const string& word, HuffCode codeTable[], int n) {
     }
     cout << "\n";
 }
+
 void huffmanExample() {
     const int N_CHAR = 26; // 26个字母
     // 打开文件
@@ -180,6 +188,11 @@ void huffmanExample() {
             freq[tolower(c) - 'a']++;
         }
     }
+    // 打印每个字母的频率
+    cout << "字母频率统计：" << endl;
+    for (int i = 0; i < N_CHAR; i++) {
+        cout << char(i + 'a') << ": " << freq[i] << endl;
+    }
     HuffTree* tree = new HuffTree(freq, N_CHAR);
     HuffCode codeTable[N_CHAR];
     tree->generateCodes(codeTable, N_CHAR);
@@ -193,6 +206,7 @@ void huffmanExample() {
     cout << endl;
     delete tree;
 }
+
 int main() {
     huffmanExample();
     return 0;
