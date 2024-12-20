@@ -228,36 +228,36 @@ public:
 
     // Prim 算法（最小生成树
     void prim(int s) {
-    reset();
-    priority(s) = 0;
-    status(s) = VISITED;
-    parent(s) = -1;
-    // 使用优先队列来选择当前边权最小的点
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-    pq.push({0, s});
-    while (!pq.empty()) {
-        int u = pq.top().second;
-        pq.pop();
-        // 遍历所有邻接的顶点
-        for (int v = firstNbr(u); v >= 0; v = nextNbr(u, v)) {
-            if (status(v) == UNDISCOVERED) {
-                int weightEdge = weight(u, v);
-                if (priority(v) > weightEdge) {
-                    priority(v) = weightEdge;
-                    parent(v) = u;
-                    pq.push({priority(v), v});
+        reset();
+        priority(s) = 0;
+        status(s) = VISITED;
+        parent(s) = -1;
+        // 使用优先队列来选择当前边权最小的点
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+        pq.push({0, s});
+        while (!pq.empty()) {
+            int u = pq.top().second;
+            pq.pop();
+            // 遍历所有邻接的顶点
+            for (int v = firstNbr(u); v >= 0; v = nextNbr(u, v)) {
+                if (status(v) == UNDISCOVERED) {
+                    int weightEdge = weight(u, v);
+                    if (priority(v) > weightEdge) {
+                        priority(v) = weightEdge;
+                        parent(v) = u;
+                        pq.push({priority(v), v});
+                    }
                 }
             }
+            status(u) = VISITED;
         }
-        status(u) = VISITED;
-    }
-    // 输出最小生成树
-    cout << "Minimum Spanning Tree using Prim's Algorithm:" << endl;
-    for (int i = 0; i < this->n; i++) {
-        if (i != s) {
-            cout << "Edge (" << parent(i) << ", " << i << ") with weight " << weight(parent(i), i) << endl;
+        // 输出最小生成树
+        cout << "Minimum Spanning Tree using Prim's Algorithm:" << endl;
+        for (int i = 0; i < this->n; i++) {
+            if (i != s) {
+                cout << "Edge (" << parent(i) << ", " << i << ") with weight " << weight(parent(i), i) << endl;
+            }
         }
-    }
 }
     // 重置图的状态
     void reset() {

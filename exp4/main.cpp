@@ -19,7 +19,7 @@ int main() {
     g.insert("BC", 2, 1, 2); // B --2-- C
     g.insert("CF", 5, 2, 5); // C --5-- F
     g.insert("DF", 6, 3, 5); // D --6-- F
-    g.insert("EF", 5, 4, 5);
+    g.insert("EF", 5, 4, 5); // E --5-- F
 
     // 测试DFS
     cout << "DFS starting from A:" << endl;
