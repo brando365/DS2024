@@ -162,9 +162,9 @@ std::vector<int> generateDescendingArray(int size, int start = 1) {
 }
 
 int main() {
-    std::vector<int> arrA = generateRandomArray(10000, 1, 50005);
-    std::vector<int> arrB = generateAscendingArray(10000, 1);
-    std::vector<int> arrC = generateDescendingArray(10000, 10000);
+    std::vector<int> arrA = generateRandomArray(1000, 1, 5000);
+    std::vector<int> arrB = generateAscendingArray(1000, 1);
+    std::vector<int> arrC = generateDescendingArray(1000, 1000);
 
     std::cout << "Random Array Test";
     // Bubble Sort
